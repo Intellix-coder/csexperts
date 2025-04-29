@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Menu, X } from "lucide-react";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -52,7 +53,7 @@ const Header = () => {
             onClick={toggleMobileMenu}
             aria-label="Toggle menu"
           >
-            <i className={`fas ${isMobileMenuOpen ? 'fa-times' : 'fa-bars'} text-xl`}></i>
+            {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </div>
 
@@ -89,16 +90,15 @@ interface NavLinkProps {
 
 const NavLink = ({ href, isActive, onClick, children }: NavLinkProps) => {
   return (
-    <Link href={href}>
-      <a
-        className={cn(
-          "nav-link transition duration-200",
-          isActive ? "text-accent font-medium" : "text-foreground hover:text-accent"
-        )}
-        onClick={onClick}
-      >
-        {children}
-      </a>
+    <Link 
+      href={href}
+      onClick={onClick}
+      className={cn(
+        "nav-link transition duration-200",
+        isActive ? "text-accent font-medium" : "text-foreground hover:text-accent"
+      )}
+    >
+      {children}
     </Link>
   );
 };
