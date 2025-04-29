@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import { 
+  FiServer, FiDatabase, FiCpu, FiCode, FiGlobe, 
+  FiHardDrive, FiTerminal, FiBriefcase, FiPower, FiHash
+} from "react-icons/fi";
 
 interface GradientCircle {
   id: number;
@@ -11,7 +15,7 @@ interface GradientCircle {
 
 interface TechIcon {
   id: number;
-  icon: string;
+  iconIndex: number;
   size: number;
   x: number;
   y: number;
@@ -56,14 +60,14 @@ const AnimatedBackground = () => {
 
     // Create tech icons
     const icons = [
-      "laptop-code", "server", "database", "microchip", 
-      "code", "network-wired", "code-branch", "bug", 
-      "robot", "file-code", "brain"
+      <FiCpu />, <FiServer />, <FiDatabase />, <FiCode />, 
+      <FiGlobe />, <FiHardDrive />, <FiTerminal />, <FiHash />,
+      <FiBriefcase />, <FiPower />
     ];
     
     const newIcons = Array.from({ length: 12 }).map((_, i) => ({
       id: i,
-      icon: icons[Math.floor(Math.random() * icons.length)],
+      icon: Math.floor(Math.random() * icons.length),
       size: Math.floor(Math.random() * 20) + 14,
       x: Math.random() * 100,
       y: Math.random() * 100,

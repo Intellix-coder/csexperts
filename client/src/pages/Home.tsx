@@ -4,6 +4,7 @@ import AnimatedBackground from "@/components/AnimatedBackground";
 import BinaryRain from "@/components/BinaryRain";
 import { scrollToElement } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { FiCpu, FiCode, FiFileText, FiAward, FiArrowRight } from "react-icons/fi";
 
 const Home = () => {
   return (
@@ -26,7 +27,7 @@ const Home = () => {
               className="flex justify-center mb-8"
             >
               <div className="w-24 h-24 rounded-full bg-accent/10 flex items-center justify-center mb-4">
-                <i className="fas fa-microchip text-4xl text-accent"></i>
+                <FiCpu className="text-4xl text-accent" />
               </div>
             </motion.div>
             
@@ -54,8 +55,8 @@ const Home = () => {
                 asChild
               >
                 <Link href="/downloads">
-                  <span className="flex items-center">
-                    Get Started <i className="fas fa-arrow-right ml-2"></i>
+                  <span className="flex items-center gap-2">
+                    Get Started <FiArrowRight />
                   </span>
                 </Link>
               </Button>
@@ -79,19 +80,19 @@ const Home = () => {
             >
               <div className="text-center">
                 <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center mx-auto mb-3">
-                  <i className="fas fa-file-alt text-accent text-xl"></i>
+                  <FiFileText className="text-accent text-xl" />
                 </div>
                 <p className="text-muted-foreground">Past Papers</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center mx-auto mb-3">
-                  <i className="fas fa-code text-accent text-xl"></i>
+                  <FiCode className="text-accent text-xl" />
                 </div>
                 <p className="text-muted-foreground">Programming</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center mx-auto mb-3">
-                  <i className="fas fa-graduation-cap text-accent text-xl"></i>
+                  <FiAward className="text-accent text-xl" />
                 </div>
                 <p className="text-muted-foreground">Career Guidance</p>
               </div>
