@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import AnimatedBackground from "@/components/AnimatedBackground";
-import { theoryPapers, practicalPapers } from "@/lib/utils";
+import { theoryPapers, practicalPapers, programmingNotes } from "@/lib/utils";
 import { motion } from "framer-motion";
 
 const Downloads = () => {
@@ -70,6 +70,36 @@ const Downloads = () => {
                     >
                       <i className="fas fa-download mr-3 text-accent"></i>
                       <span>{paper.name}</span>
+                    </a>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+          
+          {/* Programming Notes */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+            className="mt-12"
+          >
+            <Card className="bg-card/70">
+              <CardContent className="p-6 md:p-8">
+                <div className="flex items-center mb-6">
+                  <i className="fas fa-code text-xl mr-3 text-accent"></i>
+                  <h3 className="text-2xl font-bold">Programming Notes & Career Guides</h3>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {programmingNotes.map((note) => (
+                    <a
+                      key={note.id}
+                      href={note.url}
+                      className="hover-card flex items-center bg-secondary rounded-lg p-4 transition duration-300 hover:bg-secondary/80"
+                    >
+                      <i className="fas fa-file-code mr-3 text-accent"></i>
+                      <span>{note.name}</span>
                     </a>
                   ))}
                 </div>
