@@ -13,17 +13,6 @@ interface GradientCircle {
   y: number;
 }
 
-interface TechIcon {
-  id: number;
-  iconIndex: number;
-  size: number;
-  x: number;
-  y: number;
-  rotation: number;
-  delay: number;
-  duration: number;
-}
-
 interface CodeLine {
   id: number;
   text: string;
@@ -32,10 +21,25 @@ interface CodeLine {
   delay: number;
 }
 
+// Create tech icons array
+const techIconComponents = [
+  FiCpu, FiServer, FiDatabase, FiCode, FiGlobe, 
+  FiHardDrive, FiTerminal, FiBriefcase, FiPower, FiHash
+];
+
 const AnimatedBackground = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [circles, setCircles] = useState<GradientCircle[]>([]);
-  const [techIcons, setTechIcons] = useState<TechIcon[]>([]);
+  const [floatingIcons, setFloatingIcons] = useState<{
+    id: number;
+    Icon: React.ElementType;
+    size: number;
+    x: number;
+    y: number;
+    rotation: number;
+    delay: number;
+    duration: number;
+  }[]>([]);
   const [codeLines, setCodeLines] = useState<CodeLine[]>([]);
 
   useEffect(() => {
@@ -59,23 +63,20 @@ const AnimatedBackground = () => {
     setCircles(newCircles);
 
     // Create tech icons
-    const icons = [
-      <FiCpu />, <FiServer />, <FiDatabase />, <FiCode />, 
-      <FiGlobe />, <FiHardDrive />, <FiTerminal />, <FiHash />,
-      <FiBriefcase />, <FiPower />
-    ];
-    
-    const newIcons = Array.from({ length: 12 }).map((_, i) => ({
-      id: i,
-      icon: Math.floor(Math.random() * icons.length),
-      size: Math.floor(Math.random() * 20) + 14,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      rotation: Math.random() * 30 - 15,
-      delay: Math.random() * 5,
-      duration: Math.random() * 20 + 15,
-    }));
-    setTechIcons(newIcons);
+    const newIcons = Array.from({ length: 12 }).map((_, i) => {
+      const randomIndex = Math.floor(Math.random() * techIconComponents.length);
+      return {
+        id: i,
+        Icon: techIconComponents[randomIndex],
+        size: Math.floor(Math.random() * 20) + 14,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        rotation: Math.random() * 30 - 15,
+        delay: Math.random() * 5,
+        duration: Math.random() * 20 + 15,
+      };
+    });
+    setFloatingIcons(newIcons);
 
     // Create code snippets
     const codeSamples = [
@@ -137,31 +138,33 @@ const AnimatedBackground = () => {
       ))}
 
       {/* Tech Icons */}
-      {techIcons.map((icon) => (
-        <motion.div
-          key={icon.id}
-          className="absolute text-primary/25"
-          style={{
-            fontSize: `${icon.size}px`,
-            left: `${icon.x}%`,
-            top: `${icon.y}%`,
-          }}
-          initial={{ opacity: 0, rotate: icon.rotation }}
-          animate={{ 
-            opacity: [0, 0.6, 0],
-            y: [0, -50, -100],
-            rotate: [icon.rotation, icon.rotation + 10, icon.rotation - 10]
-          }}
-          transition={{
-            duration: icon.duration,
-            repeat: Infinity,
-            delay: icon.delay,
-            ease: "linear",
-          }}
-        >
-          <i className={`fas fa-${icon.icon}`} />
-        </motion.div>
-      ))}
+      {floatingIcons.map((iconData) => {
+        const IconComponent = iconData.Icon;
+        return (
+          <motion.div
+            key={iconData.id}
+            className="absolute text-primary/25"
+            style={{
+              left: `${iconData.x}%`,
+              top: `${iconData.y}%`,
+            }}
+            initial={{ opacity: 0, rotate: iconData.rotation }}
+            animate={{
+              opacity: [0, 0.6, 0],
+              y: [0, -50, -100],
+              rotate: [iconData.rotation, iconData.rotation + 10, iconData.rotation - 10]
+            }}
+            transition={{
+              duration: iconData.duration,
+              repeat: Infinity,
+              delay: iconData.delay,
+              ease: "linear",
+            }}
+          >
+            <IconComponent size={iconData.size} />
+          </motion.div>
+        );
+      })}
 
       {/* Code Snippets */}
       {codeLines.map((line) => (
@@ -173,7 +176,7 @@ const AnimatedBackground = () => {
             top: `${line.y}%`,
           }}
           initial={{ opacity: 0 }}
-          animate={{ 
+          animate={{
             opacity: [0, 0.5, 0],
           }}
           transition={{
@@ -205,9 +208,9 @@ const AnimatedBackground = () => {
                 stroke="currentColor"
                 strokeWidth="1"
                 initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ 
+                animate={{
                   pathLength: [0, 1, 1, 0],
-                  opacity: [0, 0.8, 0.8, 0] 
+                  opacity: [0, 0.8, 0.8, 0]
                 }}
                 transition={{
                   duration: 10,
