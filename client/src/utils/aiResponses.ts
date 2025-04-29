@@ -1,4 +1,4 @@
-import { getNetworkingResponses } from './responses/computerScience/networking';
+import { getNetworkingResponse } from './responses/computerScience/networking';
 import { getMentalHealthSupport } from './responses/mentalHealthSupport';
 import { getUniversityPrograms } from './responses/universityPrograms';
 
@@ -64,9 +64,10 @@ export const generateResponse = (input: string): string => {
   }
 
   // Check for networking concepts
-  const networkingResponses = getNetworkingResponses(correctedInput);
-  if (networkingResponses.length > 0) {
-    return networkingResponses[0];
+  if (lowerInput.includes('network') || lowerInput.includes('tcp') || 
+      lowerInput.includes('ip') || lowerInput.includes('internet') || 
+      lowerInput.includes('protocol')) {
+    return getNetworkingResponse(correctedInput);
   }
   
   // Default response if no specific pattern is matched

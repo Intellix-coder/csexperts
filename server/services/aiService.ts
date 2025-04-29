@@ -1,123 +1,220 @@
-import OpenAI from "openai";
 import { AIMessage, AIResponse } from "@shared/types";
+import { perplexityService } from './perplexityService';
 
-// the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || "sk-dummy-key" });
-
+/**
+ * Enhanced AI Service using local knowledge base
+ * This service focuses on providing educational responses without requiring external AI APIs
+ */
 class AIService {
-  private systemPrompt = `
-You are Mbuty Zivai, an AI assistant for CS Experts, a platform dedicated to A Level Computer Science education in Zimbabwe.
+  // Site information for use in responses
+  private siteInfo = {
+    founder: "Tinodaishe M Chibi",
+    contact: {
+      phone: "+263 78 108 1816",
+      email: "tinodaishemchibi@gmail.com",
+      whatsapp: "+263 78 108 1816", // Updated to match the actual number
+      facebook: "Chibi M Tinodaishe",
+      linkedin: "www.linkedin.com/in/tinodaishe-chibi"
+    },
+    downloadCategories: [
+      "Programming Notes",
+      "Theory Papers (2015-2023)",
+      "Practical Papers (2015-2023)",
+      "Special Topics"
+    ]
+  };
 
-Your knowledge and capabilities include:
-1. Computer Science concepts and theory
-2. Programming assistance for A Level students
-3. Career coaching in the tech field
-4. Mental support for stressed students
-5. Information about the CS Experts website
-
-Important site information:
-- Founder: Tinodaishe M Chibi, a software engineering student from Mutare who has tutored over 500 students
-- Contact: +263 78 108 1816, email: tinodaishemchibi@gmail.com, WhatsApp: +263 71 817 6525
-- Downloads: The site has past papers for both Theory (Paper 1) and Practical (Paper 2) from 2015 to 2023
-
-If a user asks about:
-- Site navigation: You can provide guidance and direct them to specific pages
-- Downloads/resources: You can explain what's available on the downloads page
-- Contact information: Provide the developer's contact details
-- Programming questions: Provide helpful explanations suitable for A Level students
-- Career guidance: Offer advice on CS career paths, resume tips, and interview preparation
-- Mental support: Provide encouraging words, study tips, and stress management techniques
-
-Respond in a friendly, encouraging manner. Be concise but comprehensive.
-
-Detect when users want to navigate to specific parts of the website and generate an appropriate action.
-
-Format your response as JSON with these fields:
-- text: Your response text
-- action: An object with:
-  - type: One of 'navigate', 'downloadFile', or 'none'
-  - target: For navigate actions, one of 'home', 'about', 'downloads', 'contact'. For downloadFile, specify the filename.
-`;
-
+  /**
+   * Get AI response from either Perplexity AI (if available) or local knowledge base
+   */
   async getAIResponse(messages: AIMessage[]): Promise<AIResponse> {
     try {
-      // If OpenAI key is not available, use fallback
-      if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === "sk-dummy-key") {
-        return this.getFallbackResponse(messages[messages.length - 1].content);
+      // If Perplexity API key is available, use it for enhanced AI capabilities
+      if (process.env.PERPLEXITY_API_KEY) {
+        return await perplexityService.getAIResponse(messages);
       }
-
-      const response = await openai.chat.completions.create({
-        model: "gpt-4o",
-        messages: [
-          { role: "system", content: this.systemPrompt },
-          ...messages.map(m => ({ role: m.role, content: m.content }))
-        ],
-        response_format: { type: "json_object" },
-      });
-
-      const content = response.choices[0].message.content || "{}";
-      const parsedResponse = JSON.parse(content) as AIResponse;
       
-      return {
-        text: parsedResponse.text || "I'm sorry, I couldn't process that request.",
-        action: parsedResponse.action || { type: "none" }
-      };
+      // Otherwise, use our local knowledge base
+      return this.getLocalResponse(messages[messages.length - 1].content);
     } catch (error) {
       console.error("Error generating AI response:", error);
       
-      // Fallback to simple logic if API fails
-      return this.getFallbackResponse(messages[messages.length - 1].content);
+      // Fallback to local knowledge base if any error occurs
+      return this.getLocalResponse(messages[messages.length - 1].content);
     }
   }
-
-  // Fallback logic in case OpenAI API is unavailable
-  private getFallbackResponse(message: string): AIResponse {
-    const lowerMessage = message.toLowerCase();
+  
+  /**
+   * Generate responses using our local knowledge base modules
+   */
+  private async getLocalResponse(userMessage: string): Promise<AIResponse> {
+    // Convert to lowercase for easier matching
+    const message = userMessage.toLowerCase();
     
-    if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+    // Dynamically import and use our specialized response modules based on message content
+    
+    // Mental health support
+    if (this.containsAny(message, ['stress', 'anxiety', 'depression', 'mental health', 'overwhelmed', 'tired', 'exhausted', 'worried'])) {
+      const { getMentalHealthSupport } = await import('../../client/src/utils/responses/mentalHealthSupport');
       return {
-        text: "Hello there! How can I help you with your computer science studies today?",
-        action: { type: 'none' }
-      };
-    } 
-    else if (lowerMessage.includes('contact') || lowerMessage.includes('phone') || lowerMessage.includes('developer')) {
-      return {
-        text: "You can reach the developer, Tinodaishe M Chibi, at +263 78 108 1816 or via email at tinodaishemchibi@gmail.com.",
-        action: { type: 'none' }
-      };
-    }
-    else if (lowerMessage.includes('downloads') || lowerMessage.includes('resources') || lowerMessage.includes('papers')) {
-      const shouldNavigate = lowerMessage.includes('take me') || lowerMessage.includes('navigate') || lowerMessage.includes('go to');
-      
-      return {
-        text: "Our downloads page contains past papers for both Theory (Paper 1) and Practical (Paper 2) from 2015 to 2023.",
-        action: shouldNavigate ? { type: 'navigate', target: 'downloads' } : { type: 'none' }
-      };
-    }
-    else if (lowerMessage.includes('career') || lowerMessage.includes('job') || lowerMessage.includes('work')) {
-      return {
-        text: "Computer Science offers many career paths including software development, data science, cybersecurity, and AI research. What specific area are you interested in learning more about?",
+        text: getMentalHealthSupport(message),
         action: { type: 'none' }
       };
     }
-    else if (lowerMessage.includes('programming') || lowerMessage.includes('code') || lowerMessage.includes('coding')) {
+    
+    // University programs and career guidance
+    if (this.containsAny(message, ['university', 'college', 'degree', 'program', 'course', 'career', 'job', 'profession'])) {
+      const { getUniversityPrograms } = await import('../../client/src/utils/responses/universityPrograms');
       return {
-        text: "For programming questions, I recommend starting with the fundamentals of algorithms and data structures. Is there a specific programming concept or language you're struggling with?",
+        text: getUniversityPrograms(message),
         action: { type: 'none' }
       };
     }
-    else if (lowerMessage.includes('stress') || lowerMessage.includes('anxiety') || lowerMessage.includes('overwhelmed')) {
+    
+    // Computer science topics and programming
+    if (this.containsAny(message, ['programming', 'code', 'algorithm', 'data structure', 'python', 'java', 'javascript', 'c++', 'database'])) {
+      // Attempt to load a more specific module based on keywords
+      try {
+        if (message.includes('networking') || message.includes('network')) {
+          const networkingModule = await import('../../client/src/utils/responses/computerScience/networking');
+          return {
+            text: networkingModule.getNetworkingResponse(message),
+            action: { type: 'none' }
+          };
+        }
+        
+        // Add more specialized topics as they become available
+        
+      } catch (error) {
+        // If specialized module fails, fall back to general programming response
+        return this.getProgrammingResponse(message);
+      }
+    }
+    
+    // Website navigation and downloads
+    if (this.containsAny(message, ['download', 'resource', 'paper', 'note', 'find', 'navigation', 'menu'])) {
+      return this.getNavigationResponse(message);
+    }
+    
+    // Contact information
+    if (this.containsAny(message, ['contact', 'phone', 'email', 'reach', 'tinodaishe', 'developer', 'creator', 'whatsapp', 'facebook'])) {
+      return this.getContactResponse(message);
+    }
+    
+    // Greetings
+    if (this.containsAny(message, ['hello', 'hi', 'hey', 'greetings', 'howdy', 'hola'])) {
+      return this.getGreetingResponse();
+    }
+    
+    // Default response for unrecognized queries
+    return this.getDefaultResponse();
+  }
+  
+  /**
+   * Check if a message contains any of the keywords
+   */
+  private containsAny(message: string, keywords: string[]): boolean {
+    return keywords.some(keyword => message.includes(keyword));
+  }
+  
+  /**
+   * Get programming-related response
+   */
+  private getProgrammingResponse(message: string): AIResponse {
+    // Simple keyword-based programming response logic
+    const programmingResponses = [
+      "Programming is about breaking down problems into logical steps. What specific aspect are you having trouble with?",
+      "When learning to code, focus first on understanding core concepts like variables, loops, and functions before diving into complex algorithms.",
+      "For A Level Computer Science, I recommend focusing on understanding algorithms and data structures as they form the foundation of programming.",
+      "Are you looking for help with a specific programming language or concept? I can provide guidance on Python, Java, JavaScript and other languages covered in A Level Computer Science."
+    ];
+    
+    // Return a random response from our options
+    const responseText = programmingResponses[Math.floor(Math.random() * programmingResponses.length)];
+    
+    return {
+      text: responseText,
+      action: { type: 'none' }
+    };
+  }
+  
+  /**
+   * Get site navigation response
+   */
+  private getNavigationResponse(message: string): AIResponse {
+    // Check for navigation intent
+    const navigateToDownloads = message.includes('downloads') || 
+                               message.includes('papers') || 
+                               message.includes('resources') ||
+                               (message.includes('go to') && message.includes('download'));
+    
+    if (navigateToDownloads) {
       return {
-        text: "It's normal to feel stressed with studies sometimes. Try breaking down your work into smaller tasks, practice mindfulness, and remember to take breaks. Would you like some specific study techniques to help manage stress?",
-        action: { type: 'none' }
+        text: `Our Downloads page contains valuable resources including:
+- Programming Notes covering core A Level topics
+- Theory Papers (Paper 1) from 2015-2023
+- Practical Papers (Paper 2) from 2015-2023
+- Special Topics with additional learning materials
+
+Would you like me to take you to the Downloads page?`,
+        action: { type: 'navigate', target: '/downloads' }
       };
     }
-    else {
-      return {
-        text: "Thank you for your message. I'm here to help with Computer Science concepts, career advice, programming questions, or website navigation. Could you please provide more details about what you need help with?",
-        action: { type: 'none' }
-      };
-    }
+    
+    // Otherwise provide general navigation info
+    return {
+      text: `The CS Experts website has several main sections:
+- Home: Overview of our services and latest updates
+- About: Information about Tinodaishe M Chibi and the CS Experts platform
+- Downloads: Access to programming notes, past papers, and learning resources
+- Contact: Forms to get in touch with our team
+
+How can I help you navigate to what you're looking for?`,
+      action: { type: 'none' }
+    };
+  }
+  
+  /**
+   * Get contact information response
+   */
+  private getContactResponse(message: string): AIResponse {
+    return {
+      text: `You can reach Tinodaishe M Chibi, the founder of CS Experts, through:
+
+- Phone/WhatsApp: ${this.siteInfo.contact.phone}
+- Email: ${this.siteInfo.contact.email}
+- Facebook: ${this.siteInfo.contact.facebook}
+- LinkedIn: ${this.siteInfo.contact.linkedin}
+
+Is there something specific you'd like to discuss with him?`,
+      action: { type: 'none' }
+    };
+  }
+  
+  /**
+   * Get greeting response
+   */
+  private getGreetingResponse(): AIResponse {
+    const greetings = [
+      "Hello! I'm Mbuya Zivai, your CS Experts assistant. How can I help with your Computer Science studies today?",
+      "Greetings! I'm here to help with A Level Computer Science topics, career advice, or website navigation. What do you need assistance with?",
+      "Hi there! I'm Mbuya Zivai, your educational AI assistant. How can I support your learning journey today?"
+    ];
+    
+    return {
+      text: greetings[Math.floor(Math.random() * greetings.length)],
+      action: { type: 'none' }
+    };
+  }
+  
+  /**
+   * Get default response for unrecognized queries
+   */
+  private getDefaultResponse(): AIResponse {
+    return {
+      text: "Thank you for your message. I'm here to help with A Level Computer Science concepts, career advice, programming questions, or website navigation. Could you please provide more details about what you need help with?",
+      action: { type: 'none' }
+    };
   }
 }
 
