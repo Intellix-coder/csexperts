@@ -1,0 +1,85 @@
+import { Card, CardContent } from "@/components/ui/card";
+import AnimatedBackground from "@/components/AnimatedBackground";
+import { theoryPapers, practicalPapers } from "@/lib/utils";
+import { motion } from "framer-motion";
+
+const Downloads = () => {
+  return (
+    <div className="relative">
+      <AnimatedBackground />
+      
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <motion.h2 
+            className="text-3xl md:text-4xl font-bold mb-12 text-center"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            Study Resources
+          </motion.h2>
+          
+          {/* Paper 1 (Theory) Resources */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
+            <Card className="bg-card/70 mb-12">
+              <CardContent className="p-6 md:p-8">
+                <div className="flex items-center mb-6">
+                  <i className="fas fa-file-alt text-xl mr-3 text-accent"></i>
+                  <h3 className="text-2xl font-bold">Paper 1 (Theory) Past Papers</h3>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {theoryPapers.map((paper) => (
+                    <a
+                      key={paper.id}
+                      href={paper.url}
+                      className="hover-card flex items-center bg-secondary rounded-lg p-4 transition duration-300 hover:bg-secondary/80"
+                    >
+                      <i className="fas fa-download mr-3 text-accent"></i>
+                      <span>{paper.name}</span>
+                    </a>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+          
+          {/* Paper 2 (Practical) Resources */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+          >
+            <Card className="bg-card/70">
+              <CardContent className="p-6 md:p-8">
+                <div className="flex items-center mb-6">
+                  <i className="fas fa-laptop-code text-xl mr-3 text-accent"></i>
+                  <h3 className="text-2xl font-bold">Paper 2 (Practical) Past Papers</h3>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {practicalPapers.map((paper) => (
+                    <a
+                      key={paper.id}
+                      href={paper.url}
+                      className="hover-card flex items-center bg-secondary rounded-lg p-4 transition duration-300 hover:bg-secondary/80"
+                    >
+                      <i className="fas fa-download mr-3 text-accent"></i>
+                      <span>{paper.name}</span>
+                    </a>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default Downloads;
