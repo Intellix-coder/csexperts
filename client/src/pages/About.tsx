@@ -81,12 +81,26 @@ const About = () => {
                     </div>
                     <div>
                       <h4 className="text-xl font-bold mb-2">Tinodaishe M Chibi</h4>
-                      <p className="text-muted-foreground mb-4">Founder</p>
-                      <p className="text-lg text-muted-foreground">
+                      <p className="text-muted-foreground mb-4">Founder & Lead Mentor</p>
+                      <p className="text-lg text-muted-foreground mb-4">
                         A software engineering student from Mutare who has tutored over 500 students in programming. 
                         With more than 3 years of experience in coding, Tinodaishe is passionate about making 
                         computer science education accessible to all Zimbabwean students.
                       </p>
+                      <div className="flex gap-4 text-muted-foreground">
+                        <a href="https://www.facebook.com/chibi.m.tinodaishe" target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-primary transition-colors">
+                          <i className="fab fa-facebook mr-2"></i>
+                          <span>Chibi M Tinodaishe</span>
+                        </a>
+                        <a href="https://www.linkedin.com/in/tinodaishe-chibi" target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-primary transition-colors">
+                          <i className="fab fa-linkedin mr-2"></i>
+                          <span>LinkedIn</span>
+                        </a>
+                        <a href="https://wa.me/+263781081816" target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-primary transition-colors">
+                          <i className="fab fa-whatsapp mr-2"></i>
+                          <span>0781081816</span>
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
