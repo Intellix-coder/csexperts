@@ -37,11 +37,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const contactData = insertContactMessageSchema.parse(req.body);
       
-      // Use email service here if available
-      // For now, just log the message
-      console.log("Contact form submission:", contactData);
+      // Import email service and send the message
+      const { emailService } = await import('./services/emailService');
+      const success = await emailService.sendContactMessage(contactData);
       
-      res.status(200).json({ message: "Message received" });
+      if (success) {
+        res.status(200).json({ message: "Message sent successfully!" });
+      } else {
+        console.log("Contact form submission (email failed):", contactData);
+        res.status(500).json({ error: "Failed to send email, but your message was received" });
+      }
     } catch (error) {
       console.error("Error in /api/contact:", error);
       res.status(400).json({ error: "Invalid form data" });

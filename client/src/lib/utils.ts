@@ -49,9 +49,23 @@ export const programmingNotes = [
   { id: "pn-1", name: "Programming Part 1", part: "1", url: "https://www.mediafire.com/file/sm6mju7lumr2pzr/PROGRAMMING_PART_1.pdf/file" },
   { id: "pn-2", name: "Programming Part 2", part: "2", url: "https://www.mediafire.com/file/8n8x77e172pmm0x/PROGRAMMING_PART_2.pdf/file" },
   { id: "pn-3", name: "Programming Part 3", part: "3", url: "https://www.mediafire.com/file/lix0pihvmewndyi/Programming_Part_3.pdf/file" },
+  { id: "pn-3b", name: "Programming Part 3B", part: "3B", url: "https://drive.google.com/file/d/1e_QWZC9aSYoVE70UB_Mk4Jh3TfMQtd96/view?usp=sharing" },
   { id: "pn-4", name: "Programming Part 4", part: "4", url: "https://www.mediafire.com/file/x21isg79y8w3qo0/programming_part_4.pdf/file" },
   { id: "pn-5", name: "Programming Part 5", part: "5", url: "https://www.mediafire.com/file/emvommfbnojk8ai/Programming_part_5%2528pure_coding_revision%2529.pdf/file" },
   { id: "pn-7", name: "Programming Part 7", part: "7", url: "https://www.mediafire.com/file/9l0r7qpjqc14hnq/programming_part_7.pdf/file" },
+  { id: "pn-7b", name: "Programming Part 7B", part: "7B", url: "https://drive.google.com/file/d/1Cftnuiym3Dz9lLaj7l0m75nZbR-B5l2U/view?usp=sharing" },
   { id: "pn-8", name: "Programming Part 8", part: "8", url: "https://www.mediafire.com/file/drhmgbatfp4qe7j/programming_part_8.pdf/file" },
+  { id: "pn-9", name: "Programming Part 9", part: "9", url: "https://drive.google.com/file/d/1g27E94rbIYrAIHE_zagnWWzY8L03MEKe/view?usp=sharing" },
+  { id: "pn-10", name: "Programming Part 10", part: "10", url: "https://drive.google.com/file/d/15O6h21gjQjEpDlJ1ZnoEY6N39RgS0PVF/view?usp=sharing" },
   { id: "degree-programmes", name: "Degree Programmes & Careers", part: "Career Guide", url: "https://www.mediafire.com/file/kb46j9vnui3j1y3/degree-programmes-offered-and-careers.pdf/file" },
+];
+
+export const specialTopics = [
+  { id: "st-1", name: "String Manipulation Q&S", category: "Examples", url: "https://drive.google.com/file/d/1ZhHeAPIGxg_c8RV33sI90mvInNY94whx/view?usp=sharing" },
+  { id: "st-2", name: "Python eBook 3.0", category: "Python", url: "https://drive.google.com/file/d/1HTjHYUAl5QVxGHadMIP5pOsxjDk6IkzV/view?usp=sharing" },
+  { id: "st-3", name: "Kapondeni", category: "Reference", url: "https://drive.google.com/file/d/1dS0KnWMR0a4wGwsisN_dyw0roJDsfMOe/view?usp=sharing" },
+  { id: "st-4", name: "Connecting Database to VB", category: "Database", url: "https://drive.google.com/file/d/1mrA_FXuPiStEljyjV4tR8sQIPttLK84l/view?usp=sharing" },
+  { id: "st-5", name: "Coding Essentials (Series 1)", category: "Essentials", url: "https://drive.google.com/file/d/1oOdhlumAxjnw-HAjJ8WEVymo8mdvgxmP/view?usp=sharing" },
+  { id: "st-6", name: "Array Binary Tree", category: "Data Structures", url: "https://drive.google.com/file/d/1MvLow2HUZ5zNx_lnZvGwh6kGFqbY6Qvh/view?usp=sharing" },
+  { id: "st-7", name: "Structured Programming", category: "Principles", url: "https://drive.google.com/file/d/1kTssJpL29snEsn0e6isKJgcCle4ItCGE/view?usp=sharing" },
 ];

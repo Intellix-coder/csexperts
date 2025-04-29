@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import AnimatedBackground from "@/components/AnimatedBackground";
-import { theoryPapers, practicalPapers, programmingNotes } from "@/lib/utils";
+import { theoryPapers, practicalPapers, programmingNotes, specialTopics } from "@/lib/utils";
 import { motion } from "framer-motion";
 
 const Downloads = () => {
@@ -100,6 +100,41 @@ const Downloads = () => {
                     >
                       <i className="fas fa-file-code mr-3 text-accent"></i>
                       <span>{note.name}</span>
+                    </a>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+          
+          {/* Special Topics */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.5 }}
+            className="mt-12"
+          >
+            <Card className="bg-card/70">
+              <CardContent className="p-6 md:p-8">
+                <div className="flex items-center mb-6">
+                  <i className="fas fa-book-open text-xl mr-3 text-accent"></i>
+                  <h3 className="text-2xl font-bold">Special Topics & Advanced Resources</h3>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {specialTopics.map((topic) => (
+                    <a
+                      key={topic.id}
+                      href={topic.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover-card flex flex-col bg-secondary rounded-lg p-4 transition duration-300 hover:bg-secondary/80"
+                    >
+                      <div className="flex items-center">
+                        <i className="fas fa-file-alt mr-3 text-accent"></i>
+                        <span className="font-medium">{topic.name}</span>
+                      </div>
+                      <span className="text-xs text-muted-foreground mt-2 ml-6">{topic.category}</span>
                     </a>
                   ))}
                 </div>
