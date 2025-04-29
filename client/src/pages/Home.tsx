@@ -10,7 +10,7 @@ const Home = () => {
   return (
     <div className="relative overflow-hidden">
       <AnimatedBackground />
-      <BinaryRain density={30} speed={1.2} opacity={0.1} />
+      <BinaryRain density={30} speed={1.2} opacity={0.1} colorScheme="random" />
       
       <section className="py-20 md:py-32">
         <div className="container mx-auto px-4">
